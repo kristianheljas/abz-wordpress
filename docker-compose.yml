@@ -1,0 +1,35 @@
+services:
+
+  wordpress:
+    image: localhost/wordpress
+    build: .
+    ports:
+      - 80:80
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: pressword
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_REDIS_DSN: tcp://redis
+    volumes:
+      - wordpress:/var/www/html
+      - wordpress-uploads:/var/www/html/wp-content/uploads
+      - ./wp-config.php:/var/www/html/wp-config.php
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: pressword
+      MYSQL_RANDOM_ROOT_PASSWORD: '1'
+    volumes:
+      - mysql:/var/lib/mysql
+
+  redis:
+    image: redis
+
+volumes:
+  wordpress:
+  wordpress-uploads:
+  mysql:
